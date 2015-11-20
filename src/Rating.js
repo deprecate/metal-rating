@@ -9,6 +9,8 @@ class Rating extends RatingBase {
 	 */
 	constructor(opt_config) {
 		super(opt_config);
+
+		this.previousRate = null;
 	}
 
 	/**
@@ -27,9 +29,9 @@ class Rating extends RatingBase {
 	 */
 	handleClickEvent(event) {
 		if (!this.disabled) {
-			var index = parseInt(event.target.dataset.index, 10);
-			var selectedItem = this.options[index];
-			var rate = selectedItem.value;
+			let index = parseInt(event.target.dataset.index, 10);
+			let selectedItem = this.options[index];
+			let rate = selectedItem.value;
 
 			if (rate === this.previousRate && this.canReset) {
 				this._reset();
@@ -41,6 +43,10 @@ class Rating extends RatingBase {
 		}
 	}
 
+	/**
+	 * Reset rating attributes to its initial value
+	 * @protected
+	 */
 	_reset() {
 		this.rate = null;
 		this.selectedItem = null;
@@ -63,7 +69,7 @@ class Rating extends RatingBase {
 	 */
 	handleMouseOverEvent(event) {
 		if (!this.disabled) {
-			var index = Number.parseInt(event.target.dataset.index, 10);
+			let index = Number.parseInt(event.target.dataset.index, 10);
 
 			if (this.currentMouseTarget !== index) {
 				this.onStartIndex = index;
@@ -73,10 +79,20 @@ class Rating extends RatingBase {
 		}
 	}
 
+	/**
+	 * Syncronize chagens of the rate attribute
+	 * @param {Number} rate
+	 * @protected
+	 */
 	syncRate(rate) {
 		this.previousRate = rate;
 	}
 
+	/**
+	 * Syncronize seletected item attribute chagens
+	 * @param {Number} item
+	 * @protected
+	 */
 	syncSelectedItem(item) {
 		if (item) {
 			this.rate = item.value;
@@ -125,15 +141,6 @@ Rating.ATTRS = {
 	},
 
 	/**
-	 * The last rate selected
-	 * @type {?number}
-	 * @default 0
-	 */
-	previousRate: {
-		value: 0
-	},
-
-	/**
 	 * The current highlighted index
 	 * @type {number}
 	 * @default -1
@@ -157,22 +164,24 @@ Rating.ATTRS = {
 	},
 
 	/**
-	 * The arry of items. It will be automaticly created if its value isn't a array.
-	 * @type {array}
-	 * @default 5
+	 * The amount of items that will represents each rate element.
+	 * @type {number}
+	 * @default null
 	 */
 	items: {
-		validator: function (value) {
-			return core.isNumber(value)
-		},
-
+		validator: core.isNumber,
 		value: null,
-
 		setter: function (value) {
 			return value || this.options.length;
 		}
 	},
 
+	/**
+     * If `true` could be reseted
+     * (i.e., have no values selected).
+     * @type {boolean}
+     * @default true
+     */
 	options: {
 		value: [
 			{

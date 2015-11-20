@@ -15,11 +15,8 @@
 
 	<div class="rating component" id="myRate1">
 		<div id="myRate1-rateItems" class="rating-items">
-			<a data-index="1" title="" class="glyphicon glyphicon-star-empty"></a>
-			<a data-index="2" title="" class="glyphicon glyphicon-star-empty"></a>
-			<a data-index="3" title="" class="glyphicon glyphicon-star-empty"></a>
-			<a data-index="4" title="" class="glyphicon glyphicon-star-empty"></a>
-			<a data-index="5" title="" class="glyphicon glyphicon-star-empty"></a>
+			<a data-index="1" title="Hi" class="glyphicon glyphicon-star-empty"></a>
+			<a data-index="2" title="Hey" class="glyphicon glyphicon-star-empty"></a>
 		</div>
 	</div>
 
@@ -30,7 +27,17 @@
 	<div class="rating component" id="myRate2"></div>
 	<script type="text/javascript">
 		new metal.Rating({
-			element: '#myRate1'
+			element: '#myRate1',
+			options: [
+				{
+					title: 'Hi',
+					value: 5
+				},
+				{
+					title: 'Hey',
+					value: 10
+				}
+			]
 		}).decorate();
 
 		new metal.Rating({
