@@ -3,10 +3,46 @@
 /**
  * This renders the main element.
  * @param? elementClasses
+ * @param? label
  * @param id
- * @skipUpdates elementClasses
  */
 {template .render}
 	<div id="{$id}" class="rating component{$elementClasses ? ' ' + $elementClasses : ''}">
+		{if $label}
+			{call .rateLabel data="all" /}
+		{/if}
+		{call .rateItems data="all" /}
+		{call .rateInput data="all" /}
 	</div>
+{/template}
+
+/**
+ * @param? label
+ * @param id
+ */
+{template .rateLabel}
+	<span id="{$id}-rateLabel" class="rate-label">{$label}</span>
+{/template}
+
+/**
+ * @param cssClasses
+ * @param onStartIndex
+ * @param items
+ * @param id
+ */
+{template .rateItems}
+	<div id="{$id}-rateItems" class="rating-items">
+		{foreach $item in $items}
+			<a data-index="{index($item)}" title="{$item.title}" class="{index($item) <= $onStartIndex ? $cssClasses.on : $cssClasses.off}"></a>
+		{/foreach}
+	</div>
+{/template}
+
+/**
+ * @param rate
+ * @param inputHiddenName
+ * @param id
+ */
+{template .rateInput}
+	<input id="{$id}-rateInput" type="text" name="{$inputHiddenName}" value="{$rate}"  />
 {/template}

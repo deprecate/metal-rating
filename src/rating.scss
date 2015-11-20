@@ -1,2 +1,11 @@
 .rating {
+	a {
+		cursor: pointer;
+		text-decoration: none;
+	}
+}
+
+.rate-label {
+	margin-right: 5px;
+	float: left;
 }

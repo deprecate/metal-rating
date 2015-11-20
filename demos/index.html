@@ -12,8 +12,45 @@
 </head>
 <body>
 	<h1>Rating</h1>
+
+	<div class="rating component" id="myRate1">
+		<div id="myRate1-rateItems" class="rating-items">
+			<a data-index="0" title="" class="glyphicon glyphicon-star-empty"></a>
+			<a data-index="1" title="" class="glyphicon glyphicon-star-empty"></a>
+			<a data-index="2" title="" class="glyphicon glyphicon-star-empty"></a>
+			<a data-index="3" title="" class="glyphicon glyphicon-star-empty"></a>
+			<a data-index="4" title="" class="glyphicon glyphicon-star-empty"></a>
+		</div>
+	</div>
+
+	<br>
+	<br>
+	<br>
+
+	<div class="rating component" id="myRate2"></div>
 	<script type="text/javascript">
-		new metal.Rating().render();
+		new metal.Rating({
+			element: '#myRate1'
+		}).decorate();
+
+		new metal.Rating({
+			label: 'Your hate is:',
+			element: '#myRate2',
+			items: [
+				{
+					title: 'Hi',
+					value: 5
+				},
+				{
+					title: 'Hi',
+					value: 10
+				},
+				{
+					title: 'Hi',
+					value: 'Awesome!'
+				}
+			]
+		}).render();
 	</script>
 </body>
 </html>
