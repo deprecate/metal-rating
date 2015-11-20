@@ -53,11 +53,9 @@ if (goog.DEBUG) {
  */
 Templates.Rating.rateItems = function(opt_data, opt_ignored, opt_ijData) {
   var output = '<div id="' + soy.$$escapeHtmlAttribute(opt_data.id) + '-rateItems" class="rating-items">';
-  var itemList24 = opt_data.items;
-  var itemListLen24 = itemList24.length;
-  for (var itemIndex24 = 0; itemIndex24 < itemListLen24; itemIndex24++) {
-    var itemData24 = itemList24[itemIndex24];
-    output += '<a data-index="' + soy.$$escapeHtmlAttribute(itemIndex24) + '" title="' + soy.$$escapeHtmlAttribute(itemData24.title) + '" class="' + soy.$$escapeHtmlAttribute(itemIndex24 <= opt_data.onStartIndex ? opt_data.cssClasses.on : opt_data.cssClasses.off) + '"></a>';
+  var itemLimit24 = opt_data.items;
+  for (var item24 = 0; item24 < itemLimit24; item24++) {
+    output += '<a data-index="' + soy.$$escapeHtmlAttribute(item24) + '" title="' + soy.$$escapeHtmlAttribute(opt_data.options[item24].title) + '" class="' + soy.$$escapeHtmlAttribute(item24 <= opt_data.onStartIndex ? opt_data.cssClasses.on : opt_data.cssClasses.off) + '"></a>';
   }
   output += '</div>';
   return soydata.VERY_UNSAFE.ordainSanitizedHtml(output);
@@ -83,7 +81,7 @@ if (goog.DEBUG) {
 
 Templates.Rating.render.params = ["elementClasses","label","id"];
 Templates.Rating.rateLabel.params = ["label","id"];
-Templates.Rating.rateItems.params = ["cssClasses","onStartIndex","items","id"];
+Templates.Rating.rateItems.params = ["cssClasses","onStartIndex","items","id","options"];
 Templates.Rating.rateInput.params = ["rate","inputHiddenName","id"];
 
 class Rating extends Component {}

@@ -29,12 +29,13 @@
  * @param onStartIndex
  * @param items
  * @param id
+ * @param options
  */
 {template .rateItems}
 	<div id="{$id}-rateItems" class="rating-items">
-		{foreach $item in $items}
-			<a data-index="{index($item)}" title="{$item.title}" class="{index($item) <= $onStartIndex ? $cssClasses.on : $cssClasses.off}"></a>
-		{/foreach}
+		{for $item in range($items)}
+			<a data-index="{$item}" title="{$options[$item].title}" class="{$item <= $onStartIndex ? $cssClasses.on : $cssClasses.off}"></a>
+		{/for}
 	</div>
 {/template}
 

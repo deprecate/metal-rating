@@ -28,7 +28,7 @@ class Rating extends RatingBase {
 	handleClickEvent(event) {
 		if (!this.disabled) {
 			var index = parseInt(event.target.dataset.index, 10);
-			var selectedItem = this.items[index];
+			var selectedItem = this.options[index];
 			var rate = selectedItem.value;
 
 			if (rate === this.previousRate && this.canReset) {
@@ -152,7 +152,7 @@ Rating.ATTRS = {
 		validator: core.isObject,
 		value: null,
 		valueFn: function() {
-			return this.items[this.selectedIndex];
+			return this.options[this.selectedIndex];
 		} 
 	},
 
@@ -163,34 +163,39 @@ Rating.ATTRS = {
 	 */
 	items: {
 		validator: function (value) {
-			return (core.isNumber(value) || value.length)
+			return core.isNumber(value)
 		},
 
-		value: [],
+		value: null,
 
-		setter: function(value) {
-			var items = [];
-
-			if (value && value.length) {
-				return value;
-			}
-			else {
-				value = value;
-
-				if (!core.isNumber(value)) {
-					value = 5;
-				}
-
-				for (var i = 0; i < value; i++) {
-					items.push({
-						title: '',
-						value: i + 1
-					});
-				}
-
-				return items;
-			}
+		setter: function (value) {
+			return value || this.options.length;
 		}
+	},
+
+	options: {
+		value: [
+			{
+				value: 1,
+				title: ''
+			},
+			{
+				value: 2,
+				title: ''
+			},
+			{
+				value: 3,
+				title: ''
+			},
+			{
+				value: 4,
+				title: ''
+			},
+			{
+				value: 5,
+				title: ''
+			}
+		]
 	},
 
 	/**
