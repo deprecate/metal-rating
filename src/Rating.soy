@@ -26,15 +26,14 @@
 
 /**
  * @param cssClasses
- * @param onStartIndex
- * @param items
+ * @param highlightStarIndex
  * @param id
  * @param options
  */
 {template .rateItems}
 	<div id="{$id}-rateItems" class="rating-items">
-		{for $item in range($items)}
-			<a data-index="{$item}" title="{$options[$item].title}" class="{$item <= $onStartIndex ? $cssClasses.on : $cssClasses.off}"></a>
+		{for $option in range($options.length)}
+			<a data-index="{$option}" title="{$options[$option].title}" class="{$option <= $highlightStarIndex ? $cssClasses.on : $cssClasses.off}"></a>
 		{/for}
 	</div>
 {/template}

@@ -6,6 +6,7 @@
 
 	<link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
 	<link rel="stylesheet" href="../build/rating.css">
+	<link rel="stylesheet" href="demo.css">
 
 	<script src="../node_modules/closure-templates/soyutils.js"></script>
 	<script src="../build/globals/rating.js"></script>
@@ -13,51 +14,79 @@
 <body>
 	<h1>Rating</h1>
 
-	<div class="rating component" id="myRate1">
-		<div id="myRate1-rateItems" class="rating-items">
-			<a data-index="1" title="Hi" class="glyphicon glyphicon-star-empty"></a>
-			<a data-index="2" title="Hey" class="glyphicon glyphicon-star-empty"></a>
+
+	<div class="rating-demo-item">
+		<h4>Decorate</h4>
+		<div class="rating component" id="myRate1">
+			<div id="myRate1-rateItems" class="rating-items">
+				<a data-index="1" title="Hi" class="glyphicon glyphicon-star"></a>
+				<a data-index="2" title="Hey" class="glyphicon glyphicon-star-empty"></a>
+			</div>
 		</div>
 	</div>
 
-	<br>
-	<br>
-	<br>
+	<div class="rating-demo-item">
+		<h4>Render</h4>
+		<div class="rating component" id="myRate2"></div>
+	</div>
 
-	<div class="rating component" id="myRate2"></div>
+	<div class="rating-demo-item">
+		<h4>Default</h4>
+		<div class="rating component" id="myRate3"></div>
+	</div>
+
 	<script type="text/javascript">
+		var decorateOptions = [
+			{
+				title: 'Hi',
+				value: 5
+			},
+			{
+				title: 'Hey',
+				value: 10
+			}
+		];
+
+		var renderOptions = [
+			{
+				title: 'Hi',
+				value: 5
+			},
+			{
+				title: 'Hi',
+				value: 10
+			},
+			{
+				title: 'Hi',
+				value: 'Awesome!'
+			}
+		];
+
 		new metal.Rating({
 			element: '#myRate1',
-			options: [
-				{
-					title: 'Hi',
-					value: 5
-				},
-				{
-					title: 'Hey',
-					value: 10
-				}
-			]
+			options: decorateOptions,
+			selectedIndex: 0
 		}).decorate();
 
 		new metal.Rating({
 			label: 'Your hate is:',
 			element: '#myRate2',
-			options: [
-				{
-					title: 'Hi',
-					value: 5
-				},
-				{
-					title: 'Hi',
-					value: 10
-				},
-				{
-					title: 'Hi',
-					value: 'Awesome!'
-				}
-			]
+			options: renderOptions,
+			selectedIndex: 2
 		}).render();
+
+		rating = new metal.Rating({
+			label: 'Your hate is:',
+			element: '#myRate3'
+		}).render();
+
+		rating.once('attrsSynced', function() {
+			var elements = rating.element.querySelectorAll('a');
+
+			elements = rating.element.querySelectorAll('a');
+
+			console.log(elements[0].className == rating.cssClasses.on)
+		});
 	</script>
 </body>
 </html>
