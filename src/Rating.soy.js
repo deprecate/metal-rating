@@ -1,8 +1,8 @@
 /* jshint ignore:start */
-import Component from 'bower:metal/src/component/Component';
-import SoyAop from 'bower:metal/src/soy/SoyAop';
-import SoyRenderer from 'bower:metal/src/soy/SoyRenderer';
-import SoyTemplates from 'bower:metal/src/soy/SoyTemplates';
+import Component from 'metal-component/src/Component';
+import SoyAop from 'metal-soy/src/SoyAop';
+import SoyRenderer from 'metal-soy/src/SoyRenderer';
+import SoyTemplates from 'metal-soy/src/SoyTemplates';
 var Templates = SoyTemplates.get();
 // This file was automatically generated from Rating.soy.
 // Please don't edit this file by hand.
@@ -11,6 +11,7 @@ var Templates = SoyTemplates.get();
  * @fileoverview Templates in namespace Templates.Rating.
  */
 
+if (typeof Templates == 'undefined') { var Templates = {}; }
 if (typeof Templates.Rating == 'undefined') { Templates.Rating = {}; }
 
 

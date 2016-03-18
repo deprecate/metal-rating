@@ -1,7 +1,7 @@
 'use strict';
 
 import RatingBase from './Rating.soy';
-import core from 'bower:metal/src/core';
+import { core } from 'metal';
 
 class Rating extends RatingBase {
     /**
