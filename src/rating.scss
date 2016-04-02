@@ -1,7 +1,10 @@
 .rating {
-	a {
+	.rating-item {
 		cursor: pointer;
 		text-decoration: none;
+    border: none;
+    padding: 0;
+    background: transparent;
 	}
 }
 

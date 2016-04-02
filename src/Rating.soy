@@ -1,48 +1,31 @@
-{namespace Templates.Rating}
+{namespace Rating}
 
 /**
  * This renders the main element.
  * @param? elementClasses
  * @param? label
- * @param id
+ * @param cssClasses
+ * @param selectedIndex
+ * @param options
+ * @param rating
  */
 {template .render}
-	<div id="{$id}" class="rating component{$elementClasses ? ' ' + $elementClasses : ''}">
+	<div class="rating component{$elementClasses ? ' ' + $elementClasses : ''}">
 		{if $label}
-			{call .rateLabel data="all" /}
+			<span class="rate-label">{$label}</span>
 		{/if}
-		{call .rateItems data="all" /}
-		{call .rateInput data="all" /}
+
+		<div class="rating-items">
+			{for $option in range($options.length)}
+				<button 
+					type="button"
+					data-index="{$option}" 
+					title="{$options[$option].title}" 
+					class="rating-item {$option <= $selectedIndex ? $cssClasses.on : $cssClasses.off}">
+				</button>
+			{/for}
+		</div>
+
+		<input type="text" value="{$rating ? $rating.value : ''}">
 	</div>
-{/template}
-
-/**
- * @param? label
- * @param id
- */
-{template .rateLabel}
-	<span id="{$id}-rateLabel" class="rate-label">{$label}</span>
-{/template}
-
-/**
- * @param cssClasses
- * @param highlightStarIndex
- * @param id
- * @param options
- */
-{template .rateItems}
-	<div id="{$id}-rateItems" class="rating-items">
-		{for $option in range($options.length)}
-			<a data-index="{$option}" title="{$options[$option].title}" class="{$option <= $highlightStarIndex ? $cssClasses.on : $cssClasses.off}"></a>
-		{/for}
-	</div>
-{/template}
-
-/**
- * @param rate
- * @param inputHiddenName
- * @param id
- */
-{template .rateInput}
-	<input id="{$id}-rateInput" type="text" name="{$inputHiddenName}" value="{$rate}"  />
 {/template}

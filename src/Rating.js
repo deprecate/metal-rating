@@ -1,22 +1,26 @@
 'use strict';
 
-import RatingBase from './Rating.soy';
-import { core } from 'metal';
+import core from 'metal';
+import Component from 'metal-component';
+import Soy from 'metal-soy';
+import templates from './Rating.soy';
 
-class Rating extends RatingBase {
+class Rating extends Component {
     /**
      * @inheritDoc
      */
     constructor(opt_config) {
         super(opt_config);
+
+        this.rating_clicked = -1;
     }
 
     /**
      * @inheritDoc
      */
     attached() {
-        this.delegate('mouseover', 'a', this.handleMouseOverEvent.bind(this));
-        this.delegate('click', 'a', this.handleClickEvent.bind(this));
+        this.delegate('mouseover', '.rating-item', this.handleMouseOverEvent.bind(this));
+        this.delegate('click', '.rating-item', this.handleClickEvent.bind(this));
         this.on('mouseout', this.handleMouseOutEvent.bind(this));
     }
 
@@ -27,14 +31,16 @@ class Rating extends RatingBase {
      */
     handleClickEvent(event) {
         if (!this.disabled) {
-            let index = parseInt(event.target.dataset.index, 10);
+            let index = parseInt(event.delegateTarget.dataset.index, 10);
 
-            if (this.selectedIndex === index && this.canReset) {
+            if (this.selectedIndex === this.rating_clicked && this.canReset) {
                 this.reset();
             }
             else {
                 this.selectedIndex = index;
             }
+
+            this.rating_clicked = this.selectedIndex;
         }
     }
 
@@ -43,7 +49,7 @@ class Rating extends RatingBase {
      * @protected
      */
     reset() {
-        this.rate = null;
+        this.rating = null;
         this.selectedIndex = -1;
     }
 
@@ -52,8 +58,8 @@ class Rating extends RatingBase {
      * @protected
      */
     handleMouseOutEvent() {
-        this.currentMouseTarget = undefined;
-        this.highlightStarIndex = this.selectedIndex;
+        this._currentMouseTarget = undefined;
+        this.selectedIndex = this.rating_clicked;
     }
 
     /**
@@ -63,24 +69,13 @@ class Rating extends RatingBase {
      */
     handleMouseOverEvent(event) {
         if (!this.disabled) {
-            let index = Number.parseInt(event.target.dataset.index, 10);
+            let index = Number.parseInt(event.delegateTarget.dataset.index, 10);
 
-            if (this.currentMouseTarget !== index) {
-                this.highlightStarIndex = index;
+            if (this._currentMouseTarget !== index) {
+                this.selectedIndex = index;
             }
 
-            this.currentMouseTarget = index;
-        }
-    }
-
-    /**
-     * Syncronize seletected item attribute chagens
-     * @param {object} item
-     * @protected
-     */
-    syncSelectedItem(item) {
-        if (item) {
-            this.rate = item.value;
+            this._currentMouseTarget = index;
         }
     }
 
@@ -90,12 +85,12 @@ class Rating extends RatingBase {
      * @protected
      */
     syncSelectedIndex(index) {
-        this.highlightStarIndex = index;
-        this.selectedItem = this.options[index] || null;
+        this.selectedIndex = index;
+        this.rating = index;
     }
 }
 
-Rating.ATTRS = {
+Rating.STATE = {
 
     /**
      * Block or unblock rating functionality
@@ -120,44 +115,29 @@ Rating.ATTRS = {
     },
 
     /**
-    * The current rate
+    * The current rating
     * @type {?number}
     * @default 0
     */
-    rate: {
-        value: null
+    rating: {
+        value: null,
+        setter: function(index) {
+            if (this.options[index]) {
+                return this.options[index];
+            }
+
+            return null;
+        }
     },
 
     /**
-    * The current highlighted index
+    * The current selected index
     * @type {number}
     * @default -1
     */
     selectedIndex: {
         validator: core.isNumber,
         value: -1
-    },
-
-
-    /**
-    * The current highlighted index
-    * @type {number}
-    * @default -1
-    */
-    highlightStarIndex: {
-        value: -1
-    },
-
-    /**
-    * The current seleted item object
-    * @type {object}
-    * @default null
-    */
-    selectedItem: {
-        validator: function() {
-            return core.isObject || null;
-        },
-        value: null
     },
 
     /**
@@ -224,5 +204,6 @@ Rating.ATTRS = {
         validator: core.isString
     }
 };
+Soy.register(Rating, templates);
 
 export default Rating;
