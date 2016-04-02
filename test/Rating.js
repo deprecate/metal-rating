@@ -1,16 +1,13 @@
 'use strict';
 
-import dom from 'bower:metal/src/dom/dom';
+import dom from 'metal-dom';
 import Rating from '../src/Rating';
-import SoyTemplates from 'bower:metal/src/soy/SoyTemplates';
 
 describe('Rating', function() {
 	var rating;
 
 	afterEach(function() {
-		if (rating) {
-			rating.dispose();
-		}
+		rating.dispose();
 	});
 
 	it('should render with default attributes.', function() {
@@ -25,103 +22,117 @@ describe('Rating', function() {
 		assert.strictEqual("This is an awesome Metal Component", rating.element.textContent);
 	});
 
-	it('should highlight until the item clicked', function(done) {
+	it('should highlight until item clicked', function() {
 		rating = new Rating().render();
 
-		var elements = rating.element.querySelectorAll('a');
+		var elements = rating.element.querySelectorAll('.rating-item');
 		dom.triggerEvent(elements[2], 'click');
 
-		setTimeout(function(){
-			elements = rating.element.querySelectorAll('a');
-			assert.strictEqual(elements[0].className, rating.cssClasses.on);
-			assert.strictEqual(elements[1].className, rating.cssClasses.on);
-			assert.strictEqual(elements[2].className, rating.cssClasses.on);
-			assert.strictEqual(elements[3].className, rating.cssClasses.off);
-			assert.strictEqual(elements[4].className, rating.cssClasses.off);
-			done();
-		}, 25);
+		rating.once('stateSynced', function(){
+			elements = rating.element.querySelectorAll('.rating-item');
+			assert.isTrue(elements[0].classList.contains('glyphicon-star'));
+			assert.isTrue(elements[1].classList.contains('glyphicon-star'));
+			assert.isTrue(elements[2].classList.contains('glyphicon-star'));
+			assert.isTrue(elements[3].classList.contains('glyphicon-star-empty'));
+			assert.isTrue(elements[4].classList.contains('glyphicon-star-empty'));
+		});
 	});
 
-	it('should set the rate value by click', function(done) {
+	it('should set the rate value by click', function() {
 		rating = new Rating().render();
 
-		var elements = rating.element.querySelectorAll('a');
+		var elements = rating.element.querySelectorAll('.rating-item');
 		dom.triggerEvent(elements[4], 'click');
 
-		setTimeout(function(){
-			assert.strictEqual(rating.rate, 5);
-			done();
-		}, 25);
+		rating.once('stateSynced', function(){
+			assert.strictEqual(rating.value, 4);
+		});
 	});
 
-	it('should highlight items until mouseover event target element', function(done) {
+	it('should highlight items until mouseover event target element', function() {
 		rating = new Rating().render();
 
-		var elements = rating.element.querySelectorAll('a');
+		var elements = rating.element.querySelectorAll('.rating-item');
 		dom.triggerEvent(elements[4], 'mouseover');
 
-		setTimeout(function(){
-			elements = rating.element.querySelectorAll('a');
-			assert.strictEqual(elements[0].className, rating.cssClasses.on);
-			assert.strictEqual(elements[1].className, rating.cssClasses.on);
-			assert.strictEqual(elements[2].className, rating.cssClasses.on);
-			assert.strictEqual(elements[3].className, rating.cssClasses.on);
-			assert.strictEqual(elements[4].className, rating.cssClasses.on);
-			done();
-		}, 25);
+		rating.once('stateSynced', function(){
+			elements = rating.element.querySelectorAll('.rating-item');
+			assert.isTrue(elements[0].classList.contains('glyphicon-star'));
+			assert.isTrue(elements[1].classList.contains('glyphicon-star'));
+			assert.isTrue(elements[2].classList.contains('glyphicon-star'));
+			assert.isTrue(elements[3].classList.contains('glyphicon-star'));
+			assert.isTrue(elements[4].classList.contains('glyphicon-star'));
+		});
 	});
 
-	it('should highlight the element according with current rate after mouseout event', function(done) {
+	it('should highlight the element according to current rate after mouseleave event', function() {
 		rating = new Rating().render();
 
-		var elements = rating.element.querySelectorAll('a');
+		var elements = rating.element.querySelectorAll('.rating-item');
 		dom.triggerEvent(elements[4], 'click');
 
-		setTimeout(function(){
-			dom.triggerEvent(elements[4], 'mouseout');
+		rating.once('stateSynced', function(){
+			dom.triggerEvent(rating, 'mouseleave');
 
-			setTimeout(function(){
-				elements = rating.element.querySelectorAll('a');
-				assert.strictEqual(elements[0].className, rating.cssClasses.on);
-				assert.strictEqual(elements[1].className, rating.cssClasses.on);
-				assert.strictEqual(elements[2].className, rating.cssClasses.on);
-				assert.strictEqual(elements[3].className, rating.cssClasses.on);
-				assert.strictEqual(elements[4].className, rating.cssClasses.on);
-				done();
-			}, 25);
-		}, 25);
+			rating.once('stateSynced', function(){
+				elements = rating.element.querySelectorAll('.rating-item');
+				assert.isTrue(elements[0].classList.contains('glyphicon-star'));
+				assert.isTrue(elements[1].classList.contains('glyphicon-star'));
+				assert.isTrue(elements[2].classList.contains('glyphicon-star'));
+				assert.isTrue(elements[3].classList.contains('glyphicon-star'));
+				assert.isTrue(elements[4].classList.contains('glyphicon-star'));
+			});
+		});
 	});
 
-	it('should clear rate if the user click twice in the same element', function(done) {
+	it('should clear rate if the user click twice in the same element', function() {
 		rating = new Rating().render();
 
-		var elements = rating.element.querySelectorAll('a');
+		var elements = rating.element.querySelectorAll('.rating-item');
+		
+		var defaultValue = rating.value;
+		dom.triggerEvent(elements[4], 'click');
 		dom.triggerEvent(elements[4], 'click');
 
-		setTimeout(function(){
-			assert.strictEqual(elements[0].className, rating.cssClasses.on);
-			assert.strictEqual(elements[1].className, rating.cssClasses.on);
-			assert.strictEqual(elements[2].className, rating.cssClasses.on);
-			assert.strictEqual(elements[3].className, rating.cssClasses.on);
-			assert.strictEqual(elements[4].className, rating.cssClasses.on);
+		rating.once('stateSynced', function(){
+			assert.isTrue(elements[0].classList.contains('glyphicon-star-empty'));
+			assert.isTrue(elements[1].classList.contains('glyphicon-star-empty'));
+			assert.isTrue(elements[2].classList.contains('glyphicon-star-empty'));
+			assert.isTrue(elements[3].classList.contains('glyphicon-star-empty'));
+			assert.isTrue(elements[4].classList.contains('glyphicon-star-empty'));
 
-			assert.strictEqual(rating.rate, 3);
-
-			done();
-		}, 25);
+			assert.strictEqual(rating.value, defaultValue);
+		});
 	});
 
 	it('should not reset the rating value if the canReset attribute is false.', function() {
+		rating = new Rating().render();
+
+		var elements = rating.element.querySelectorAll('.rating-item');
+
+		dom.triggerEvent(elements[4], 'click');
+
+		rating.canReset = false;
+
+		dom.triggerEvent(elements[4], 'click');
+
+		rating.once('stateSynced', function() {
+			assert.strictEqual(rating.value, 4);
+		});
 	});
 
 	it('should not change rate attribute if rating is disabled', function() {
 		rating = new Rating().render();
 
-		var elements = rating.element.querySelectorAll('a');
+		var elements = rating.element.querySelectorAll('.rating-item');
+		var defaultValue = rating.value;
 		
 		rating.disabled = true;
 
 		dom.triggerEvent(elements[2], 'click');
-		assert.strictEqual(rating.rate, null);
+
+		rating.once('stateSynced', function() {
+			assert.strictEqual(rating.value, defaultValue);
+		});
 	});
 });

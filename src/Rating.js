@@ -12,7 +12,7 @@ class Rating extends Component {
     constructor(opt_config) {
         super(opt_config);
 
-        this.rating_clicked = -1;
+        this.ratingClicked = -1;
     }
 
     /**
@@ -21,7 +21,7 @@ class Rating extends Component {
     attached() {
         this.delegate('mouseover', '.rating-item', this.handleMouseOverEvent.bind(this));
         this.delegate('click', '.rating-item', this.handleClickEvent.bind(this));
-        this.on('mouseout', this.handleMouseOutEvent.bind(this));
+        this.on('mouseleave', this.handleMouseLeaveEvent.bind(this));
     }
 
     /**
@@ -33,14 +33,14 @@ class Rating extends Component {
         if (!this.disabled) {
             let index = parseInt(event.delegateTarget.dataset.index, 10);
 
-            if (this.selectedIndex === this.rating_clicked && this.canReset) {
+            if (index === this.ratingClicked && this.canReset) {
                 this.reset();
             }
             else {
-                this.selectedIndex = index;
+                this.value = index;
             }
 
-            this.rating_clicked = this.selectedIndex;
+            this.ratingClicked = this.value;
         }
     }
 
@@ -49,17 +49,25 @@ class Rating extends Component {
      * @protected
      */
     reset() {
-        this.rating = null;
-        this.selectedIndex = -1;
+        this.value = -1;
+        this.ratingClicked = -1;
     }
 
     /**
      * Handles mouseout event
      * @protected
      */
-    handleMouseOutEvent() {
+    handleMouseLeaveEvent() {
         this._currentMouseTarget = undefined;
-        this.selectedIndex = this.rating_clicked;
+        this._setPreviousRate();
+    }
+
+    /**
+     * Handles mouseout event
+     * @protected
+     */
+    _setPreviousRate() {
+        this.value = this.ratingClicked;
     }
 
     /**
@@ -72,21 +80,11 @@ class Rating extends Component {
             let index = Number.parseInt(event.delegateTarget.dataset.index, 10);
 
             if (this._currentMouseTarget !== index) {
-                this.selectedIndex = index;
+                this.value = index;
             }
 
             this._currentMouseTarget = index;
         }
-    }
-
-    /**
-     * Current item selected index
-     * @param {number} index
-     * @protected
-     */
-    syncSelectedIndex(index) {
-        this.selectedIndex = index;
-        this.rating = index;
     }
 }
 
@@ -115,27 +113,11 @@ Rating.STATE = {
     },
 
     /**
-    * The current rating
-    * @type {?number}
-    * @default 0
+    * The current rating index value
+    * @type {?number} index
+    * @default null
     */
-    rating: {
-        value: null,
-        setter: function(index) {
-            if (this.options[index]) {
-                return this.options[index];
-            }
-
-            return null;
-        }
-    },
-
-    /**
-    * The current selected index
-    * @type {number}
-    * @default -1
-    */
-    selectedIndex: {
+    value: {
         validator: core.isNumber,
         value: -1
     },
@@ -170,8 +152,7 @@ Rating.STATE = {
     },
 
     /**
-    * If `true` could be reseted
-    * (i.e., have no values selected).
+    * Flag indicating if this component can be reset or not
     * @type {boolean}
     * @default true
     */

@@ -5,27 +5,38 @@
  * @param? elementClasses
  * @param? label
  * @param cssClasses
- * @param selectedIndex
  * @param options
- * @param rating
+ * @param value
+ * @param disabled
  */
 {template .render}
-	<div class="rating component{$elementClasses ? ' ' + $elementClasses : ''}">
+	<div
+		aria-valuemin="{$options[0].value}"
+		aria-valuemax="{$options[$options.length -1].value}"
+		aria-valuenow="{$options[$value] ? $options[$value].value : ''}"
+		aria-valuetext="{$options[$value] ? $options[$value].title : ''}"
+		class="rating component{$elementClasses ? ' ' + $elementClasses : ''}">
 		{if $label}
-			<span class="rate-label">{$label}</span>
+			<label class="rate-label">{$label}</label>
 		{/if}
 
 		<div class="rating-items">
 			{for $option in range($options.length)}
 				<button 
-					type="button"
+					aria-disabled="{$disabled}"
+					aria-pressed="{$option <= $value ? true : false}"
+					aria-label="{$options[$option].title}"
+					class="btn rating-item {$option <= $value ? $cssClasses.on : $cssClasses.off}"
 					data-index="{$option}" 
 					title="{$options[$option].title}" 
-					class="rating-item {$option <= $selectedIndex ? $cssClasses.on : $cssClasses.off}">
+					type="button">
 				</button>
 			{/for}
 		</div>
 
-		<input type="text" value="{$rating ? $rating.value : ''}">
+		<input
+			type="hidden"
+			aria-hidden="true"
+			value="{$options[$value] ? $options[$value].value : $value}">
 	</div>
 {/template}
