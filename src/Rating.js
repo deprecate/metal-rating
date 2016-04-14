@@ -145,28 +145,16 @@ Rating.STATE = {
      */
     options: {
         validator: Array.isArray,
-        value: [
-            {
-                value: 1,
-                title: ''
-            },
-            {
-                value: 2,
-                title: ''
-            },
-            {
-                value: 3,
-                title: ''
-            },
-            {
-                value: 4,
-                title: ''
-            },
-            {
-                value: 5,
-                title: ''
-            }
-        ]
+        valueFn: function() {
+            let itens = new Array(5).fill({}).map((item, index) => {
+                item.title = 'Value ' + (index + 1);
+                item.value = index;
+                
+                return item;
+            });
+
+            return itens;
+        }
     },
 
     /**
