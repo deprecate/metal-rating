@@ -80,6 +80,7 @@ if (goog.DEBUG) {
 }
 
 exports.render.params = ["label","cssClasses","disabled","inputHiddenName","options","value"];
+exports.render.types = {"label":"any","cssClasses":"any","disabled":"any","inputHiddenName":"any","options":"any","value":"any"};
 templates = exports;
 return exports;
 
@@ -87,6 +88,6 @@ return exports;
 
 class Rating extends Component {}
 Soy.register(Rating, templates);
-export default templates;
 export { Rating, templates };
+export default templates;
 /* jshint ignore:end */
