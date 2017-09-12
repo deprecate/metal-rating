@@ -172,4 +172,5 @@ Rating.STATE = {
 };
 Soy.register(Rating, templates);
 
+export { Rating };
 export default Rating;
